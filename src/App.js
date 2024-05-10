@@ -1,23 +1,35 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
+import './App.scss';
+import { API_URL } from './utils/constants';
+import PostCard from './components/PostCard';
+import PostModal from './components/PostModal';
 
 function App() {
+  const [posts,setPosts] = useState("");
+  const [isModalOpen,setIsModalOpen] = useState(false);
+  const [currentModal,setCurrentModal] = useState("");
+
+  const handleModalOpen = () => {
+    setIsModalOpen(!isModalOpen);
+  }
+  const getPosts = async () => {
+    const res = await fetch(API_URL);
+    const posts = await res.json();
+    setPosts(posts);
+}
+useEffect(() => {
+    getPosts();
+}, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+    <div className='flex-container'>
+      {posts && posts.map((post)=>{
+        return <PostCard key={post.id} post={post} setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen} setCurrentModal={setCurrentModal}/>
+      })}
+    </div>
+    {(posts && isModalOpen) &&<PostModal post={currentModal} handleModalOpen={handleModalOpen}/>}
     </div>
   );
 }

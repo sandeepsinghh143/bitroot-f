@@ -1,0 +1,1 @@
+export const API_URL = "https://my-json-server.typicode.com/Codeinwp/front-end-internship-api/posts";
